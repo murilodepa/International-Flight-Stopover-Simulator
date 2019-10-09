@@ -1,0 +1,126 @@
+PROJETO DE PROLOG
+
+INTEGRANTES DA DUPLA: CHRISTOPHER OLIVEIRA   # 18726430
+                      MURILO DE PAULA ARAUJO # 17747775
+---------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+vôo(sao_paulo,k,gaa1,1:00,(seguinte,17:25),1,verde,[qua,sex,dom]).%15:25 hrsvôo(sao_paulo,k,gaa1,1:00,(mesmo,17:25),1,verde,[qua,sex,dom]).%15:25 hrs
+
+vôo(k,g,gba1,1:00,(mesmo,17:25),1,verde,[qua,sex,dom]).%15:25 hrs
+
+
+
+
+
+
+% ----------------------------------------------------------------------------------------------------------------------------------%
+% Função Pertence utilizada no projeto para verificar se os dias da
+% semanas pertecem aos vôos em um determinado dia desejado.
+
+pertence(X,[X|Cauda]).
+pertence(X,[Cabeça|Cauda]) :-
+pertence(X,Cauda).
+% ----------------------------------------------------------------------------------------------------------------------------------%
+
+
+% ----------------------------------------------------------------------------------------------------------------------------------%
+% Problema 1 - Verificar se é possível ir de uma cidade a outra, através
+% de um vôo direto (sem escalas), em determinado dia, hora e companhia.
+
+vôo_direto(Origem, Destino, Companhia , Dia, Horário):-
+       vôo(Origem, Destino, _, Horário, ( _, _), 0, Companhia, Dias_Disponiveis),
+       pertence(Dia, Dias_Disponiveis).
+% ----------------------------------------------------------------------------------------------------------------------------------%
+
+
+% ----------------------------------------------------------------------------------------------------------------------------------%
+% Problema 2 - Existe vôo entre duas cidades, num determinado dia da
+% semana? A sua consulta deve retornar o dia da semana, o horário de
+% saída, o horário de chegada e a companhia.
+
+filtra_voo_dia_semana(Origem, Destino, Dia_Semana, Horario_Saida, Horario_Chegada, Companhia):-
+       vôo(Origem, Destino, _, Horario_Saida,( _, Horario_Chegada), _, Companhia, DiasDisponiveis),
+       pertence(Dia_Semana, DiasDisponiveis).
+
+% ----------------------------------------------------------------------------------------------------------------------------------%
+
+
+% ----------------------------------------------------------------------------------------------------------------------------------%
+% Problema 3 - É possível viajar de uma cidade X a outra Y, ainda que seja
+% necessário utilizar diversos vôos? Independente do tempo da espera em
+% aeroportos (poderia ser de até uma semana). A sua função deve retornar
+% a lista de códigos de vôos que serão realizados.
+
+roteiro(Origem, Destino, [ListaVoos]):-
+    vôo(Origem, Destino, ListaVoos, _,_, _, _, _).
+roteiro(Origem, Destino, [Cabeca|Cauda]):-
+    vôo(Origem, X, Cabeca, _, _, _, _, _), roteiro(X, Destino, Cauda).
+
+% ----------------------------------------------------------------------------------------------------------------------------------%
+
+
+% ----------------------------------------------------------------------------------------------------------------------------------%
+% Problema 4 - Qual é o vôo de menor duração entre duas cidades dadas,
+% num determinado dia da semana? Sua consulta deve retornar dia da
+% semana, horário de saída, horário de chegada e a companhia.
+
+calcularDuracoes(Origem, Destino, Dia, Lista) :-
+    vôo(Origem, Destino, _, Hora_Partida:Minuto_Partida,(Dia_Chegada, Hora_Chegada:Minuto_Chegada), _, _, Dias_Disponiveis),
+    (pertence(Dia, Dias_Disponiveis), Dia_Chegada=mesmo,   Horario_Partida is Hora_Partida*60+Minuto_Partida,
+    Horario_Chegada is Hora_Chegada*60+Minuto_Chegada,
+    Lista is Horario_Chegada-Horario_Partida);
+
+    vôo(Origem, Destino, _, Hora_Partida:Minuto_Partida,(Dia_Chegada, Hora_Chegada:Minuto_Chegada), _, _, Dias_Disponiveis),
+    (pertence(Dia, Dias_Disponiveis), Horario_Partida is Hora_Partida*60+Minuto_Partida,
+     Horario_Chegada is Hora_Chegada*60+Minuto_Chegada,
+     Lista is 1440-Horario_Partida+Horario_Chegada).
+
+
+menor_Elemento([Cabeça,Cauda], Cabeça):- Cabeça < Cauda,!; Cabeça is Cauda.
+menor_Elemento([Cabeça|Cauda], X):-  menor_Elemento(Cauda,Y),
+    (Cabeça < Y, X is Cabeça,!; X is Y).
+
+
+verificarDuracao(Hora_Partida, Minuto_Partida, Hora_Chegada, Minuto_Chegada, Dia, DuracaoTotal):-
+       (Dia=mesmo, Horario_Partida is Hora_Partida*60+Minuto_Partida,
+       Horario_Chegada is Hora_Chegada*60+Minuto_Chegada, DuracaoTotal is Horario_Chegada-Horario_Partida),!;
+
+       (Horario_Partida is Hora_Partida*60+Minuto_Partida, Horario_Chegada is Hora_Chegada*60+Minuto_Chegada,
+       DuracaoTotal is 1440-Horario_Partida+Horario_Chegada). % 24 horas equivale a 1440 minutos.
+
+
+retornarInformacoes(Origem, Destino, Menor, Hora_Partida:Minuto_Partida, Hora_Chegada:Minuto_Chegada, Companhia):-
+        vôo(Origem, Destino, _, Hora_Partida:Minuto_Partida, (DiaChegada, Hora_Chegada:Minuto_Chegada), _, Companhia, _),
+        verificarDuracao(Hora_Partida, Minuto_Partida, Hora_Chegada, Minuto_Chegada, DiaChegada, Menor),!.
+
+
+ %-menorDuracao(Origem,Destino,dia,HorarioSaida,HorarioChegada,Companhia)
+menorDuracao(Origem, Destino, Dia, Horario_Saida, Horario_Chegada, Companhia):-
+        findall(L, calcularDuracoes(Origem, Destino, Dia, L), Lista),
+        menor_Elemento(Lista, Menor), retornarInformacoes(Origem, Destino, Menor, Horario_Saida, Horario_Chegada, Companhia).
+% ----------------------------------------------------------------------------------------------------------------------------------%
+
+
+% ----------------------------------------------------------------------------------------------------------------------------------%
+% Problema 5 - Qual a duração de uma viagem entre duas cidades quaisquer
+% (mesmo que sejam necessários vários vôos), mostrando o dia e horário de
+% partida e a duração total da viagem.
+
+horario([], 0).
+horario([Cabeca|Cauda], Horario):-
+    vôo(_, _, Cabeca, Horariopartida:Minutopartida, (Dia,Horariochegada:Minutochegada), _, _, _), horario(Cauda, Horario1),
+    Dia=mesmo, TempPartida is Horariopartida*60+Minutopartida, TempChegada is Horariochegada*60+Minutochegada, Horario is Horario1+TempChegada-TempPartida;
+
+    vôo(_, _, Cabeca, Horariopartida:Minutopartida, (Dia,Horariochegada:Minutochegada), _, _, _), horario(Cauda, Horario1),
+    Dia=seguinte, TempPartida is Horariopartida*60+Minutopartida, TempChegada is Horariochegada*60+Minutochegada, Horario is 1440+TempChegada-TempPartida+Horario1.
+
+convert(Min, H, M):-
+    divmod(Min, 60, H, M).
+
+roteiro1(Origem, Destino, DiaSaida, HorSaida, Duração):-
+   roteiro(Origem, Destino, [Cabeca|Cauda]), horario([Cabeca|Cauda], Min),
+   vôo(_, _, Cabeca, HorSaida, _, _, _, DiaSaida), convert(Min, H, M), Duração=H:M.
+% ----------------------------------------------------------------------------------------------------------------------------------%
