@@ -25,5 +25,9 @@
 * Após ter instalado o SWI-Prolog, deve ser copiado todo o texto salvo no arquivo "PROJETO DE PROLOG.txt" e cole no software SWI-Prolog.
 * Logo em seguida, execute o programa, para o projeto de vôos internacionais em Prolog ser executado.
 
+### Desenvolvedores
+* Murilo de Paula Araujo.
+* Christopher de Oliveira Souza.
+
 ### Contribuições
-- Contribuições e possíveis melhorias no meu ponto de vista são sempre bem-vindas.
+* Contribuições e possíveis melhorias no meu ponto de vista são sempre bem-vindas.
