@@ -20,7 +20,7 @@
 * Para executar o programa na linguagem Prolog, no qual o algoritmo foi realizado, necessita apenas do software SWI-Prolog, podendo ser realizado o download e desenvolvendo o projeto com ele, como já descrito, não precisando de nenhuma outra ferramenta adicional ou especial, esse programa pode ser obtido no link acima.
 
 ### Desenvolvimento
-* Git clone https://github.com/murilodepa/Projeto-de-voos-internacionais-em-Prolog.git
+* Git clone https://github.com/murilodepa/International-flight-stopover-simulator.git
 * Se realizar "Download ZIP", necessita de um descompactador de arquivos.
 * Após ter instalado o SWI-Prolog, deve ser copiado todo o texto salvo no arquivo "PROJETO DE PROLOG.txt" e cole no software SWI-Prolog.
 * Logo em seguida, execute o programa, para o projeto de vôos internacionais em Prolog ser executado.
