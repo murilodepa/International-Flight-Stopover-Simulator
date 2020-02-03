@@ -1,6 +1,6 @@
 # Projeto de vôos internacionais em Prolog
 
-## Trabalhando com simulações de vôos internacionais em Prolog. 
+## Trabalhando com simulações de escalas e durações de vôos internacionais em Prolog. 
 
 ### Descrição do Projeto
    * Neste projeto foi proposto para responder 5 questões programando em Prolog, essas 5 questões podem estar sendo com mais detalhes no PDF anexado junto com o arquivo fonte do projeto, mas como o próprio título já descreve, são questões referentes a vôos internacionais.
